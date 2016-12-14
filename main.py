@@ -208,7 +208,7 @@ def textBlit(data, type=0):
 						cloc = (cbit-cpos)/7
 						printBool(("cloc set to " + str(cloc)), runOnce)
 						ctrip = int(hx[cloc], 16) | 1 << (6-cpos)
-						hx[cloc] = format(ctrip, 'x')
+						hx[cloc] = format(ctrip, 'x').zfill(2)
 						printBool(("hx["+str(cloc)+"] changed to " + hx[cloc]), runOnce)
 			printBool("===NEXT===", runOnce)
 		printBool(("hx output:"), runOnce)
