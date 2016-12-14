@@ -12,9 +12,9 @@ scrX = 720
 scrY = 576
 
 screen = pygame.display.set_mode([scrX,scrY])	#, pygame.FULLSCREEN)
-surf = pygame.Surface((768,768))
-surfBlink = pygame.Surface((768,768))
-surfSte = pygame.Surface((768,768))
+surf = pygame.Surface((768,800))
+surfBlink = pygame.Surface((768,800))
+surfSte = pygame.Surface((768,800))
 testcard = pygame.image.load('res/testcard.png').convert()
 size = 32
 font = pygame.font.Font('res/Bedstead.ttf', size)
@@ -24,6 +24,9 @@ onAir=False
 cock = 0
 gameClock = pygame.time.Clock()
 blink = True
+
+# RFC4648-compliant base64 index
+index64 = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_'
 
 #FUNCTIONS!
 
@@ -141,7 +144,7 @@ def blitG(cha, xy, cBG, cFG, sep=False, blink=False, dBG=False, dFG=False):
 				pygame.draw.rect(surfBlink, cFG, pygame.Rect(gPos(cnt, xy, sep, dFG), (xs, ys)))
 		cnt += 1
 		
-# Odd parity checking
+# Parity checking
 def oParity(hx, runOnce):
 	if (int(hx, 16) > 127):
 		printBool("Parity byte may have been detected.", runOnce)
@@ -165,13 +168,54 @@ def oParity(hx, runOnce):
 		return hx
 
 # Blits TTV file to surface
-def ttvBlit(file):
-	printBool(("Opening TTV file: " + file), runOnce)
-	with open(file, 'rb') as f:
-		cont = f.read()
-	hx = re.compile('(..)').findall(binascii.hexlify(cont))
+# Added parameter to render base64 teletext strings
+def textBlit(data, type=0):
+	# Type 0: TTV file input
+	# Type 1: base64 string input
+	rangeLim = 25
+	if type == 0:
+		printBool(("Opening TTV file: " + data), runOnce)
+		with open(data, 'rb') as f:
+			cont = f.read()
+		hx = re.compile('(..)').findall(binascii.hexlify(cont))
+		if len(hx) < 1000:
+			rangeLim = 24
+	# Special thanks to Mr Rawles for the url2raw.pl at https://github.com/rawles/edit-tf
+	elif type == 1:
+		printBool("Parsing base64 string...", runOnce)
+		if len(data) == 1120:
+			rangeLim = 24
+		hx = []
+		for s in range(0,(40*rangeLim)):
+			hx.append('00')
+		for r in range(0,len(data)):
+			try:
+				val = index64.index(data[r])
+			except ValueError:
+				printBool(("ERROR: Character at position " + r + " should be one from the base64 alphabet!"), runOnce)
+			else:
+				printBool(("NOW EXAMINING " + data[r] + " (value is " + str(val) + ")"), runOnce)
+				for b in range(0,6):
+					bit = val & (1<<(5-b))
+					if bit > 0:
+						cbit = (r*6) + b
+						printBool(("cbit set to " + str(cbit)), runOnce)
+						cpos = cbit % 7
+						printBool(("cpos set to " + str(cpos)), runOnce)
+						cloc = (cbit-cpos)/7
+						printBool(("cloc set to " + str(cloc)), runOnce)
+						ctrip = int(hx[cloc], 16) | 1 << (6-cpos)
+						hx[cloc] = format(ctrip, 'x')
+						printBool(("hx["+str(cloc)+"] changed to " + hx[cloc]), runOnce)
+			printBool("===NEXT===", runOnce)
+		printBool(("hx output:"), runOnce)
+		for z in range(0,len(hx)):
+			printBool(hx[z], runOnce)
 	dSkip = False
-	for c in range(0,24):
+	rangeLim = 25
+	if len(hx) < 1000:
+		rangeLim = 24
+	for c in range(0,rangeLim):
 		bg = color('00')
 		fg = color('07')
 		blinker = False
@@ -235,20 +279,22 @@ def ttvBlit(file):
 						blitG(char, coords(d,c), bg, fg, gSep, blinker, dSkip, s2)
 					else:
 						blitChar(cha, coords(d, c), bg, fg, blinker, dSkip, s2)		
+
+pygame.mixer.music.load('res/jazz.ogg')
+pygame.time.delay(500)
+pygame.mixer.music.play(-1)
 while onRun:
 	surf.fill((0,0,0))
-	ttvBlit('pages/tstx.ttv')
+	textBlit('BQt-_Xtw8taDpo080HDDnyoOm9Bzw9sqDzv68kHffy1oECAo4cOHCAl4KKHDhw4cOHDhw4cOHDhw4cOHDhw4cOHDhw4cOCn79-JKH69IUXbnyZEq_fv379-_fv379-_fv379-_fv379-Kf__96T0f1hLwgI-P_Qor3________________________8ovXryWTwsXJyPj9____rAovXr169evXr169evXr169evXryvx4RwfPn7__fp1e____pSvz58-fPnz58-fPnz58-fPnz58KtyPj___r05Ph86Ed_9iVXL16_-vXr169ev___________8pwI736cns-f____1Ir_7wt__tUGr_q_6v5TgV__0Hz58KcCn_6wJrvvLf_____96sKfC39GhQav-Lnq_lN5X__Qf__8p_Kf_5NctJ7______rViwp_Lf_7X9__6v-r__QFf_9B_alFn8p__l9_sn6____9A-XrSn8t_QIP6D_q_6v5dYV__0H___Kfyn_-9J8PH_____y-zu_Kfy3_-1___-r_q__yqD__Qf2pTh_Kf_5P8vT4eH7ur28OHgp_Lf_7Vfv_6v6r__KoP_9B_alP_8p__k9_dmjVr163oyV_yn_hw4EfRThw4cOHDh04cOHDhw__yqxYkJq__zgR2vSfv-lKqFixIRalVCxYsWLFixYsWLFixYsKIECAv0Jo1__58_P05RAgQICOpCgB1IsyLUi2KiBAgQIECAogQF1X_-9WLMHxgUQIC6BAgItySAGgixJNSfSQIECBAgQICqwv4a7_5L99L__6rpw-fyf9p8KrFixYsWLFixYsWLFixYsKF_X_-yTkv78v__tWX___J_Wm8p8-fPnz58-fPnz58-fPnwvo_6v_9uS-F9rJfoaol-8mvRlPH___________________y65KuXryS5etLr169eUWLFixYvXr169evXr169evXr169evInSaQHQ5ZefNBFpw0CtBaB9N6DHsy4eSDpo080HPHyy5dyAidJpAdDll580EWnDQK0D8Hm38kHTRlQaMuzgg54-WXLuQICJ0ukDwuufmgw7siDll49cvPpzQd8uzHv25ciDD0dIECBAgInS6APo6dOHN0vX59PTR1xLse_av5Ye-zLzX5cmnot6ZkCA', 1)
 	if blink == True:
 		surf.blit(surfBlink, (0,0))
 		blink = False
 	elif blink == False:
 		surf.blit(surfSte, (0,0))
 		blink = True
-	#pygame.draw.rect(surf, (0,0,0), pygame.Rect(coords(0, 0), (19*40, 32)))
-	#pygame.draw.rect(surf, (0,0,255), pygame.Rect(coords(0, 23), (19*40, 32)))
-	#surf.blit(font.render(time.strftime("    SUPERTEXT BGC %a %d %b "), False, (255,255,255)), coords(0, 0))
-	#surf.blit(font.render(time.strftime("%I:%M/%S%p"), False, (255,255,0)), coords(29, 0))
-	#surf.blit(font.render("   GREETINGS FROM KAIJU BLUE COUNTRY   ", False, (255,255,255)), coords(0, 23))
+	pygame.draw.rect(surf, (0,0,0), pygame.Rect(coords(0, 0), (19*40, 32)))
+	surf.blit(font.render(time.strftime("    SUPERTEXT BGC %a %d %b "), False, (255,255,255)), coords(0, 0))
+	surf.blit(font.render(time.strftime("%I:%M/%S%p"), False, (255,255,0)), coords(29, 0))
 	pygame.transform.scale(surf, (scrX,scrY), screen)
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:

@@ -1,3 +1,3 @@
 @ECHO OFF
-python main_pygame2.py > log.txt
+python main.py > log.txt
 pause
