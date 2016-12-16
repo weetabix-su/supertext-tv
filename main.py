@@ -12,7 +12,10 @@ scrX = 720
 scrY = 576
 
 # Insert base64 teletext string here
-super64 = 'BQt-_Xtw8taDpo080HDDnyoOm9Bzw9sqDzv68kHffy1oECAo4cOHCAl4KKHDhw4cOHDhw4cOHDhw4cOHDhw4cOHDhw4cOCn79-JKH69IUXbnyZEq_fv379-_fv379-_fv379-_fv379-Kf__96T0f1hLwgI-P_Qor3________________________8ovXryWTwsXJyPj9____rAovXr169evXr169evXr169evXryvx4RwfPn7__fp1e____pSvz58-fPnz58-fPnz58-fPnz58KtyPj___r05Ph86Ed_9iVXL16_-vXr169ev___________8pwI736cns-f____1Ir_7wt__tUGr_q_6v5TgV__0Hz58KcCn_6wJrvvLf_____96sKfC39GhQav-Lnq_lN5X__Qf__8p_Kf_5NctJ7______rViwp_Lf_7X9__6v-r__QFf_9B_alFn8p__l9_sn6____9A-XrSn8t_QIP6D_q_6v5dYV__0H___Kfyn_-9J8PH_____y-zu_Kfy3_-1___-r_q__yqD__Qf2pTh_Kf_5P8vT4eH7ur28OHgp_Lf_7Vfv_6v6r__KoP_9B_alP_8p__k9_dmjVr163oyV_yn_hw4EfRThw4cOHDh04cOHDhw__yqxYkJq__zgR2vSfv-lKqFixIRalVCxYsWLFixYsWLFixYsKIECAv0Jo1__58_P05RAgQICOpCgB1IsyLUi2KiBAgQIECAogQF1X_-9WLMHxgUQIC6BAgItySAGgixJNSfSQIECBAgQICqwv4a7_5L99L__6rpw-fyf9p8KrFixYsWLFixYsWLFixYsKF_X_-yTkv78v__tWX___J_Wm8p8-fPnz58-fPnz58-fPnwvo_6v_9uS-F9rJfoaol-8mvRlPH___________________y65KuXryS5etLr169eUWLFixYvXr169evXr169evXr169evInSaQHQ5ZefNBFpw0CtBaB9N6DHsy4eSDpo080HPHyy5dyAidJpAdDll580EWnDQK0D8Hm38kHTRlQaMuzgg54-WXLuQICJ0ukDwuufmgw7siDll49cvPpzQd8uzHv25ciDD0dIECBAgInS6APo6dOHN0vX59PTR1xLse_av5Ye-zLzX5cmnot6ZkCA'
+super64 = 'BQt-_Xtw8taDpo080HDDnyoOm9Bzw9sqDzv68kHffy1oECAo4cOHCAl4KKHDhw4cOHDhw4cOHDhw4cOHDhw4cOHDhw4cOCn79-JKH69IUXbnyZEq_fv379-_fv379-_fv379-_fv379-Kf__96T0f1hLwgI-P_Qor3________________________8ovXryWTwsXJyPj9____rAovXr169evXr169evXr169evXryvx4RwfPn7__fp1e____pSvz58-fPnz58-fPnz58-fPnz58KtyPj___r05Ph86Ed_9iVXL16_-vXr169ev___________8pwI736cns-f____1Ir_7wt__tUGr_q_6v5TgV__0Hz58KcCn_6wJrvvLf_____96sKfC39GhQav-Lnq_lN5X__Qf__8p_Kf_5NctJ7______rViwp_Lf_7X9__6v-r__QFf_9B_alFn8p__l9_sn6____9A-XrSn8t_QIP6D_q_6v5dYV__0H___Kfyn_-9J8PH_____y-zu_Kfy3_-1___-r_q__yqD__Qf2pTh_Kf_5P8vT4eH7ur28OHgp_Lf_7Vfv_6v6r__KoP_9B_alP_8p__k9_dmjVr163oyV_yn_hw4EfRThw4cOHDh04cOHDhw__yqxYkJq__zgR2vSfv-lKqFixIRalVCxYsWLFixYsWLFixYsKIECAv0Jo1__58_P05RAgQICOpCgB1IsyLUi2KiBAgQIECAogQF1X_-9WLMHxgUQIC6BAgItySAGgixJNSfSQIECBAgQICqwv4a7_5L99L__6rpw-fyf9p8KrFixYsWLFixYsWLFixYsKF_X_-yTkv78v__tWX___J_Wm8oa-fPnz58-fPnz58-fPnwvo_6v_9uS-F9rJfoaol-8mvRlPBr__________________y65KuXryS5etLr169eUWLFixYvXml69evXr169evXr169evInSaQHQ5ZefNBFpw0CtBaB9N6DHsy4eSDpo080HPHyy5dyAidJpAdDll580EWnDQK0D8Hm38kHTRlQaMuzgg54-WXLuQICJ0ukDwuufmgw7siDll49cvPpzQd8uzHv25ciDD0dIECBAgInS6APo6dOHN0vX59PTR1xLse_av5Ye-zLzX5cmnot6ZkCA'
+
+# Branding
+name = '*NEW* SUPERTEXT'
 
 screen = pygame.display.set_mode([scrX,scrY])	#, pygame.FULLSCREEN)
 surf = pygame.Surface((768,800))
@@ -135,8 +138,8 @@ def blitG(cha, xy, cBG, cFG, sep=False, blink=False, dBG=False, dFG=False):
 		if cnt % 2 == 0:
 			xs = 9
 		if sep == True:
-			xs -= 2
-			ys -= 2
+			xs -= 3
+			ys -= 3
 		if dFG == True:
 			ys = ys * 2
 		if sw == 1:
@@ -283,7 +286,7 @@ def textBlit(data, type=0):
 					else:
 						blitChar(cha, coords(d, c), bg, fg, blinker, dSkip, s2)		
 
-pygame.mixer.music.load('res/jazz.ogg')
+pygame.mixer.music.load('bgm/jazz.ogg')
 pygame.time.delay(500)
 pygame.mixer.music.play(-1)
 while onRun:
@@ -296,7 +299,7 @@ while onRun:
 		surf.blit(surfSte, (0,0))
 		blink = True
 	pygame.draw.rect(surf, (0,0,0), pygame.Rect(coords(0, 0), (19*40, 32)))
-	surf.blit(font.render(time.strftime("    SUPERTEXT BGC %a %d %b "), False, (255,255,255)), coords(0, 0))
+	surf.blit(font.render(time.strftime(" " + '{:>16}'.format(name)[:16] + " %a %d %b "), False, (255,255,255)), coords(0, 0))
 	surf.blit(font.render(time.strftime("%I:%M/%S%p"), False, (255,255,0)), coords(29, 0))
 	pygame.transform.scale(surf, (scrX,scrY), screen)
 	for event in pygame.event.get():
