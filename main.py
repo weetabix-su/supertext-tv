@@ -8,8 +8,8 @@ import re
 
 pygame.init()
 
-scrX = 720
-scrY = 576
+scrX = pygame.display.Info().current_w
+scrY = pygame.display.Info().current_h
 
 # Insert base64 teletext string here
 super64 = 'BQt-_Xtw8taDpo080HDDnyoOm9Bzw9sqDzv68kHffy1oECAo4cOHCAl4KKHDhw4cOHDhw4cOHDhw4cOHDhw4cOHDhw4cOCn79-JKH69IUXbnyZEq_fv379-_fv379-_fv379-_fv379-Kf__96T0f1hLwgI-P_Qor3________________________8ovXryWTwsXJyPj9____rAovXr169evXr169evXr169evXryvx4RwfPn7__fp1e____pSvz58-fPnz58-fPnz58-fPnz58KtyPj___r05Ph86Ed_9iVXL16_-vXr169ev___________8pwI736cns-f____1Ir_7wt__tUGr_q_6v5TgV__0Hz58KcCn_6wJrvvLf_____96sKfC39GhQav-Lnq_lN5X__Qf__8p_Kf_5NctJ7______rViwp_Lf_7X9__6v-r__QFf_9B_alFn8p__l9_sn6____9A-XrSn8t_QIP6D_q_6v5dYV__0H___Kfyn_-9J8PH_____y-zu_Kfy3_-1___-r_q__yqD__Qf2pTh_Kf_5P8vT4eH7ur28OHgp_Lf_7Vfv_6v6r__KoP_9B_alP_8p__k9_dmjVr163oyV_yn_hw4EfRThw4cOHDh04cOHDhw__yqxYkJq__zgR2vSfv-lKqFixIRalVCxYsWLFixYsWLFixYsKIECAv0Jo1__58_P05RAgQICOpCgB1IsyLUi2KiBAgQIECAogQF1X_-9WLMHxgUQIC6BAgItySAGgixJNSfSQIECBAgQICqwv4a7_5L99L__6rpw-fyf9p8KrFixYsWLFixYsWLFixYsKF_X_-yTkv78v__tWX___J_Wm8oa-fPnz58-fPnz58-fPnwvo_6v_9uS-F9rJfoaol-8mvRlPBr__________________y65KuXryS5etLr169eUWLFixYvXml69evXr169evXr169evInSaQHQ5ZefNBFpw0CtBaB9N6DHsy4eSDpo080HPHyy5dyAidJpAdDll580EWnDQK0D8Hm38kHTRlQaMuzgg54-WXLuQICJ0ukDwuufmgw7siDll49cvPpzQd8uzHv25ciDD0dIECBAgInS6APo6dOHN0vX59PTR1xLse_av5Ye-zLzX5cmnot6ZkCA'
@@ -17,7 +17,7 @@ super64 = 'BQt-_Xtw8taDpo080HDDnyoOm9Bzw9sqDzv68kHffy1oECAo4cOHCAl4KKHDhw4cOHDhw
 # Branding
 name = '*NEW* SUPERTEXT'
 
-screen = pygame.display.set_mode([scrX,scrY])	#, pygame.FULLSCREEN)
+screen = pygame.display.set_mode([scrX,scrY], pygame.FULLSCREEN)
 surf = pygame.Surface((768,800))
 surfBlink = pygame.Surface((768,800))
 surfSte = pygame.Surface((768,800))
@@ -303,8 +303,15 @@ while onRun:
 	surf.blit(font.render(time.strftime("%I:%M/%S%p"), False, (255,255,0)), coords(29, 0))
 	pygame.transform.scale(surf, (scrX,scrY), screen)
 	for event in pygame.event.get():
+		if event.type == pygame.KEYDOWN:
+			if (pygame.key.get_pressed()[pygame.K_PAGEUP] != 0 and pygame.mixer.music.get_volume < 1.0):
+				pygame.mixer.music.set_volume(pygame.mixer.music.get_volume() + 0.1)
+			if (pygame.key.get_pressed()[pygame.K_PAGEDOWN] != 0 and pygame.mixer.music.get_volume > 0.0):
+				pygame.mixer.music.set_volume(pygame.mixer.music.get_volume() - 0.1)
+			if (pygame.key.get_pressed()[pygame.K_END] != 0):
+				onRun = False
 		if event.type == pygame.QUIT:
-			onRub = False
+			onRun = False
 	pygame.display.flip()
 	if runOnce == True:
 		runOnce = False
